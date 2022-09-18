@@ -1,0 +1,132 @@
+.gg-math-plus,
+.gg-math-plus::after {
+    display: block;
+    box-sizing: border-box;
+    background: currentColor;
+    border-radius: 10px
+}
+
+.gg-math-plus {
+    margin-top: -2px;
+    position: relative;
+    transform: scale(var(--ggs, 1));
+    width: 16px;
+    height: 2px
+}
+
+.gg-math-plus::after {
+    content: "";
+    position: absolute;
+    width: 2px;
+    height: 16px;
+    top: -7px;
+    left: 7px
+}
+
+.gg-math-minus {
+    box-sizing: border-box;
+    position: relative;
+    display: block;
+    transform: scale(var(--ggs, 1));
+    width: 16px;
+    height: 2px;
+    background: currentColor;
+    border-radius: 10px
+}
+
+.gg-close {
+    box-sizing: border-box;
+    position: relative;
+    display: block;
+    transform: scale(var(--ggs, 1));
+    width: 22px;
+    height: 22px;
+    border: 2px solid transparent;
+    border-radius: 40px
+}
+
+.gg-close::after,
+.gg-close::before {
+    content: "";
+    display: block;
+    box-sizing: border-box;
+    position: absolute;
+    width: 16px;
+    height: 2px;
+    background: currentColor;
+    transform: rotate(45deg);
+    border-radius: 5px;
+    top: 8px;
+    left: 1px
+}
+
+.gg-close::after {
+    transform: rotate(-45deg)
+}
+
+.gg-chevron-right {
+    box-sizing: border-box;
+    position: relative;
+    display: block;
+    transform: scale(var(--ggs, 1));
+    width: 22px;
+    height: 22px;
+    border: 2px solid transparent;
+    border-radius: 100px
+}
+
+.gg-chevron-right::after {
+    content: "";
+    display: block;
+    box-sizing: border-box;
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-bottom: 2px solid;
+    border-right: 2px solid;
+    transform: rotate(-45deg);
+    right: 6px;
+    top: 4px
+}
+
+.gg-spinner {
+    transform: scale(var(--ggs, 1))
+}
+
+.gg-spinner,
+.gg-spinner::after,
+.gg-spinner::before {
+    box-sizing: border-box;
+    position: relative;
+    display: block;
+    width: 20px;
+    height: 20px
+}
+
+.gg-spinner::after,
+.gg-spinner::before {
+    content: "";
+    position: absolute;
+    border-radius: 100px
+}
+
+.gg-spinner::before {
+    animation: spinner 1s cubic-bezier(.6, 0, .4, 1) infinite;
+    border: 3px solid transparent;
+    border-top-color: currentColor
+}
+
+.gg-spinner::after {
+    border: 3px solid;
+    opacity: .2
+}
+
+@keyframes spinner {
+    0% {
+        transform: rotate(0deg)
+    }
+
+    to {
+        transform: rotate(359deg)
+    }
+}

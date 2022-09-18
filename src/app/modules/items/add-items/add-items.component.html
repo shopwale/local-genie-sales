@@ -1,0 +1,66 @@
+<lgs-header [title]="'Add Items'" [showBack]="true"></lgs-header>
+<div class="body">
+
+    <div class="p-10 pos-relative">
+        <input type="text" name="subCategoryName" class="sub-category-name-input" [(ngModel)]="subCategoryName"
+            placeholder="Enter New Sub Category Name" (keyup)="getSubCategoriesByName()">
+        <button class="button-filled add-sub-category" [disabled]="!subCategoryName || subCategoryName.length<3"
+            (click)="addSubCategory()">
+            <i class="gg-math-plus"></i>
+        </button>
+        <div *ngIf="showSubcategoryList" class="sub-categories-list">
+            <p *ngFor="let subCategory of subCategories" (click)="selectSubCategory(subCategory)"
+                class="text-capitalize">{{subCategory?.subCategoryName}}</p>
+        </div>
+    </div>
+
+    <div *ngFor="let item of items" class="card">
+        <h4 class="title text-capitalize"><span>{{item.subCategoryName}}</span> <span
+                (click)="item.show = !item.show">
+                <i [class]="'gg-math-'+(item.show ? 'minus' :'plus')" *ngIf="!item.loading"></i>
+        <i class="gg-spinner" *ngIf="item.loading"></i>
+            </span> </h4>
+
+        <div class="p-10" *ngIf="item?.subItems && item?.subItems?.length">
+            <div *ngFor="let sub of item?.subItems" class="sub-items">
+                <div [ngClass]="{'name': sub.price && sub.price != sub.backPrice}">{{sub?.itemName}}
+                    ({{sub?.unitOfMeasure}})</div>
+                <div class="flex">
+                    <input type="number" [(ngModel)]="sub.price">
+                    <div *ngIf="sub.price && sub.price != sub.backPrice" (click)="updateItemPrice(sub)">
+                        <button class="button-filled">
+                            <i class="gg-chevron-right"></i>
+                        </button>
+                        <button class="button-border" (click)="restoreItemPrice(sub)">
+                            <i class="gg-close"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div *ngIf="item.show" class="pos-relative">
+            <div class="flex new-item">
+                <input type="text" name="itemName" class="sub-category-name-input" [(ngModel)]="item.itemName"
+                    placeholder="Item Name" (keyup)="getItemsByName(item)">
+                <select [name]="'item'+item.subCategoryId" [(ngModel)]="item.measurementId" class="m-b-0">
+                    <option value="">Unit</option>
+                    <option [value]="measurement.measurementId" *ngFor="let measurement of measurements">
+                        {{measurement.unitOfMeasure}}</option>
+                </select>
+                <input type="number"  [name]="'price'+item.subCategoryId"  [(ngModel)]="item.itemPrice" placeholder="Price">
+                <button class="button-filled add-item" [disabled]="!item.itemName || item.itemName.length<3 || !item.measurementId"
+                    (click)="addItem(item)">
+                    <i class="gg-chevron-right"></i>
+                </button>
+            </div>
+            <div *ngIf="item.showList" class="sub-categories-list items-list">
+                <p *ngFor="let _item of item.itemsList" (click)="selectItem(_item, item)" class="text-capitalize">
+                    {{_item?.itemName}} ({{_item?.unitOfMeasure}})</p>
+            </div>
+        </div>
+
+    </div>
+
+</div>

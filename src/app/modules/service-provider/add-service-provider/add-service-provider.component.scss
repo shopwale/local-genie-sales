@@ -1,0 +1,20 @@
+
+.code {
+    position: absolute;
+    top: 45px;
+    color: var(--font-color);
+    left: 10px;
+    font-size: 15px;
+}
+
+
+label {
+    display: block;
+}
+
+.deliver {
+    border: 2px solid var(--background-color);
+    padding: 15px;
+    border-radius: 5px;
+    font-size: 80%;
+}
