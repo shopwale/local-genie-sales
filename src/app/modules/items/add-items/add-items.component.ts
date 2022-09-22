@@ -1,3 +1,4 @@
+import { ServiceProviderI } from './../../../interfaces/service-provider';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { ItemsI, ItemsResponseI, MeasurementI } from 'src/app/interfaces/items';
@@ -26,6 +27,10 @@ export class AddItemsComponent implements OnInit {
   subCategories: any[] = [];
 
   itemsObj: any;
+  title = "Add Items";
+  interval: any;
+  showSpinner = false;
+  showSpinnerSubCategory = false;
 
   constructor(
     private itemsService: ItemsService,
@@ -36,11 +41,16 @@ export class AddItemsComponent implements OnInit {
 
   ngOnInit(): void {
     this.activatedRoute.queryParamMap.subscribe((params) => {
+      console.log(params.getAll("businessCode"));
+
       this.serviceProviderId = Number(params.get("serviceProviderId"));
       this.categoryId = Number(params.get("categoryId"));
-      this.businesCode = String(params.get("businesCode"));
+      this.businesCode = String(params.get("businessCode"));
+      console.log(this.businesCode);
+
       this.getItemsByServiceProvider();
       this.getMeasurements();
+      this.getServiceProviderByBusinessCode();
     });
   }
 
@@ -81,16 +91,32 @@ export class AddItemsComponent implements OnInit {
   }
 
   getItemsByName(item: any) {
-    item.showList = false;
-    this.itemsService.getItemsByCategoryAndSubcategory(item.categoryId, item.subCategoryId, item.itemName)
-      .subscribe(res => {
-        const subItems = item.subItems.map((item: any) => item.itemName);
 
-        item.itemsList = res.filter(_item => !subItems.includes(_item.itemName));
-        console.log(item);
-        item.showList = !!item.itemsList.length;
+    
+    if (!item.itemName) {
+      item.showList = false;
+      item.showSpinner = false;
+      return;
+    }
+    if (this.interval) clearTimeout(this.interval);
 
-      });
+    this.interval = setTimeout(() => {
+      item.showSpinner = true;
+      item.showList = false;
+      this.itemsService.getItemsByCategoryAndSubcategory(item.categoryId, item.subCategoryId, item.itemName)
+        .subscribe(res => {
+          const subItems = item.subItems.map((item: any) => item.itemName);
+
+          item.itemsList = res.filter(_item => !subItems.includes(_item.itemName));
+          console.log(item);
+          item.showList = !!item.itemsList.length;
+          item.showSpinner = false;
+
+        }, err => {
+          item.showSpinner = false;
+
+        });
+    }, 300)
   }
 
   selectSubCategory(subCategory: any) {
@@ -99,8 +125,8 @@ export class AddItemsComponent implements OnInit {
     this.showSubcategoryList = false;
 
     this.items.unshift({
-          categoryId: this.categoryId,
-          categoryName: this.categoryName,
+      categoryId: this.categoryId,
+      categoryName: this.categoryName,
       subCategoryName: subCategory.subCategoryName,
       subCategoryId: subCategory.subCategoryId,
       measurementId: "",
@@ -113,20 +139,30 @@ export class AddItemsComponent implements OnInit {
     });
   }
 
-  interval: any;
   getSubCategoriesByName() {
     console.log(this.subCategoryName);
+
+    if (!this.subCategoryName) {
+      this.showSubcategoryList = false;
+      this.showSpinnerSubCategory = false;
+      return;
+    }
 
     if (this.interval) clearTimeout(this.interval);
 
     this.interval = setTimeout(() => {
+      this.showSpinnerSubCategory = true;
 
       this.categoryService.GetSubCategoriesWithCategoryId({ subCategoryName: this.subCategoryName, categoryId: this.categoryId as string })
         .subscribe(res => {
           const subCategories = this.items.map(item => item.subCategoryName);
           this.subCategories = res.filter(sub => !subCategories.includes(sub.subCategoryName));
           this.showSubcategoryList = !!this.subCategories.length;
-        }, console.log)
+          this.showSpinnerSubCategory = false;
+        }, err => {
+          console.log(err);
+          this.showSpinnerSubCategory = false;
+        })
     }, 300)
 
   }
@@ -190,6 +226,7 @@ export class AddItemsComponent implements OnInit {
   }
 
   getItemsByServiceProvider() {
+    this.showSpinner = true;
     this.itemsService.getItemsByServiceProviderId(this.serviceProviderId)
       .subscribe((res) => {
         console.log(res);
@@ -224,9 +261,22 @@ export class AddItemsComponent implements OnInit {
           });
           return r;
         }, {}));
+        this.showSpinner = false;
 
         console.log(this.items);
 
+      }, err => {
+        this.showSpinner = false;
+        console.log(err);
+
+      })
+  }
+
+  getServiceProviderByBusinessCode() {
+
+    this.serviceProviderService.getServiceProviderByBusinessCode(this.businesCode)
+      .subscribe(res => {
+        this.title += " - " + res.serviceProviderName
       }, err => {
         console.log(err);
 

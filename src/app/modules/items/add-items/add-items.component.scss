@@ -30,12 +30,28 @@ select {
     margin: 0;
 }
 
+.spinner-block {
+    position: relative;
+
+    .gg-spinner {
+        position: absolute;
+        right: 5px;
+        top: 10px;
+
+        &.sub-categories {
+            right: 60px;
+            top: 15px;
+        }
+
+    }
+}
+
 
 .sub-categories-list {
     position: absolute;
     z-index: 1;
     background: #fff;
-    top: 70px;
+    top: 60px;
     right: 10px;
     left: 10px;
     padding: 10px;
@@ -92,9 +108,11 @@ select {
 }
 
 .new-item {
-    input, select, button {
+
+    input,
+    select,
+    button {
         padding: 10px 5px;
-        text-align: center;
         margin-bottom: 0;
         height: auto;
         font-size: 13px;

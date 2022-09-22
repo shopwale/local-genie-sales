@@ -15,11 +15,16 @@ export class ServiceProviderService {
     return this.http.post(ApiConst.ADD_SERVICE_PROVIDER, serviceProvider) as Observable<AddServiceProviderResponseI>;
   }
 
-  getServiceProvider(serviceProvider: ServiceProviderI) {
-    return this.http.post("", serviceProvider);
+  mapItemToServiceProvider(serviceProviderId: number, itemId: number, price: number = 0) {
+    return this.http.post(ApiConst.MAP_SINGLE_ITEM_TO_SERVICE_PROVIDER, { serviceProviderId, itemId, price })
   }
 
-  mapItemToServiceProvider(serviceProviderId: number, itemId: number, price: number = 0) {
-    return this.http.post(ApiConst.MAP_SINGLE_ITEM_TO_SERVICE_PROVIDER, {serviceProviderId, itemId, price})
+  getServiceProviders(): Observable<ServiceProviderI[]> {
+    return this.http.get(ApiConst.GET_SERVICE_PROVIDERS) as Observable<ServiceProviderI[]>;
   }
+
+  getServiceProviderByBusinessCode(businessCode: string): Observable<ServiceProviderI> {
+    return this.http.get(ApiConst.GET_SERVICE_PROVIDER_BY_BUSINESS_CODE, { params: { businessCode } }) as Observable<ServiceProviderI>;
+  }
+
 }

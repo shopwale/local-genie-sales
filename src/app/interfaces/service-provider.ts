@@ -8,6 +8,7 @@ export interface ServiceProviderI {
     serviceProviderIconURL?: string;
     businessId?: string;
     registredDate?: string | Date;
+    businessCode?: string;
 }
 
 export interface AddServiceProviderResponseI {
