@@ -5,6 +5,7 @@ html {
     padding: 0;
     font-family: sans-serif;
     letter-spacing: 1px;
+    background: var(--background-color);
 }
 
 :root {
@@ -34,6 +35,21 @@ html {
     right: 0;
     z-index: 0;
     padding-bottom: 30px;
+}
+
+.font-80 {
+    font-size: 80%;
+}
+
+a {
+    text-decoration: unset;
+    color: unset;
+}
+
+h4 {
+    margin-bottom: 10px;
+    margin-top: 10px;
+    text-transform: capitalize;
 }
 
 .card {

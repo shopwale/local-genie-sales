@@ -8,6 +8,9 @@ export class ApiConst {
     public static GET_CATEGORIES = `${CUSTOMER_API_URL}getCategories`;
 
     public static ADD_SERVICE_PROVIDER = `${MANAGE_SERVICE_PROVIDER_API_URL}addServiceProvider`;
+    public static GET_SERVICE_PROVIDERS = `${MANAGE_SERVICE_PROVIDER_API_URL}serviceProviders`;
+    public static GET_SERVICE_PROVIDER_BY_BUSINESS_CODE = `${MANAGE_SERVICE_PROVIDER_API_URL}getServiceProviderByBusinessCode`;
+    
 
     public static MAP_SINGLE_ITEM_TO_SERVICE_PROVIDER = `${MANAGE_SERVICE_PROVIDER_API_URL}mapSingleItemToServiceProvider`;
 

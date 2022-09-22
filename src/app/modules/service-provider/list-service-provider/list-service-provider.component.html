@@ -1,2 +1,15 @@
 <lgs-header [title]="'Service Providers'"></lgs-header>
-<p>list-service-provider works!</p>
+<div class="body">
+
+    <a class="card flex" *ngFor="let serviceProvider of serviceProviders" [routerLink]="['/items', 'add']" [queryParams]="queryParams(serviceProvider)">
+        <div>
+            <h4>{{serviceProvider.serviceProviderName}}</h4>
+            <p class="font-80">{{serviceProvider.address}}</p>
+        </div>
+        <i class="gg-chevron-right"></i>
+    </a>
+</div>
+
+<a [routerLink]="['/service-provider', 'add']" class="fab-icon">
+    <i class="gg-math-plus"></i>
+</a>
