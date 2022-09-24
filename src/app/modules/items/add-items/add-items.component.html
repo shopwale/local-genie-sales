@@ -72,5 +72,21 @@
 
     </div>
 
+    <div class="fab-icon" (click)="showShare = !showShare">
+        <img [src]="serviceProvider.qrCode" #img>
+    </div>
+
+    <div class="share" *ngIf="showShare">
+        <a [href]="whatasppLink" target="_blank">
+            <i class="gg-share"></i>
+        </a>
+    </div>
+    <div class="download" *ngIf="showShare">
+        <a [href]="serviceProvider.qrCode" target="_blank" [download]="serviceProvider.serviceProviderName+'.png'" >
+            <i class="gg-software-download"></i>
+        </a>
+
+    </div>
+
 
 </div>
