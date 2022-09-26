@@ -1,5 +1,5 @@
 import { ServiceProviderI } from './../../../interfaces/service-provider';
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { ItemsI, ItemsResponseI, MeasurementI } from 'src/app/interfaces/items';
 import { CategoriesService } from 'src/app/services/categories.service';
@@ -11,15 +11,14 @@ import { ServiceProviderService } from 'src/app/services/service-provider.servic
   templateUrl: './add-items.component.html',
   styleUrls: ['./add-items.component.scss']
 })
-export class AddItemsComponent implements OnInit {
-
-  serviceProviderId!: string | number;
+export class AddItemsComponent implements OnInit, AfterViewInit {
+  @ViewChild("img") img!: ElementRef;
   categoryId!: string | number;
-  businesCode!: string;
   subCategoryName: string = "";
   categoryName: string = "";
   showSubcategoryList = false;
   disabledSubCategory = true;
+  showShare = false;
 
   items: any[] = [];
   measurements: MeasurementI[] = [];
@@ -31,6 +30,9 @@ export class AddItemsComponent implements OnInit {
   interval: any;
   showSpinner = false;
   showSpinnerSubCategory = false;
+  whatasppLink = "";
+
+  serviceProvider: ServiceProviderI = {serviceProviderName: "", pinCode: "", mobileNumber: 0, address: "" };
 
   constructor(
     private itemsService: ItemsService,
@@ -39,18 +41,28 @@ export class AddItemsComponent implements OnInit {
     private serviceProviderService: ServiceProviderService,
   ) { }
 
+  ngAfterViewInit(): void {
+    console.log(this.img.nativeElement);
+    // this.img.onload = () => {
+    //   let canvas = <HTMLCanvasElement>document.createElement('CANVAS')
+    //       const ctx = canvas.getContext('2d');
+
+    //       ctx?.drawImage(this.img, 0, 0);
+    //       const dataURL = canvas.toDataURL();
+    //       console.log(dataURL);
+
+    // }
+  }
+
   ngOnInit(): void {
     this.activatedRoute.queryParamMap.subscribe((params) => {
       console.log(params.getAll("businessCode"));
 
-      this.serviceProviderId = Number(params.get("serviceProviderId"));
       this.categoryId = Number(params.get("categoryId"));
-      this.businesCode = String(params.get("businessCode"));
-      console.log(this.businesCode);
 
-      this.getItemsByServiceProvider();
+      this.getServiceProviderByBusinessCode(String(params.get("businessCode")));
+      this.getItemsByServiceProvider(Number(params.get("serviceProviderId")));
       this.getMeasurements();
-      this.getServiceProviderByBusinessCode();
     });
   }
 
@@ -92,7 +104,7 @@ export class AddItemsComponent implements OnInit {
 
   getItemsByName(item: any) {
 
-    
+
     if (!item.itemName) {
       item.showList = false;
       item.showSpinner = false;
@@ -171,7 +183,7 @@ export class AddItemsComponent implements OnInit {
     console.log(item, selectedItem);
     item.showList = false;
     item.itemName = "";
-    this.serviceProviderService.mapItemToServiceProvider(Number(this.serviceProviderId), selectedItem.itemId, 0)
+    this.serviceProviderService.mapItemToServiceProvider(Number(this.serviceProvider.serviceProviderId), selectedItem.itemId, 0)
       .subscribe(res => {
         console.log(res);
         item.subItems.push({ ...selectedItem, ...{ subItems: "", price: 0, show: false } });
@@ -192,7 +204,7 @@ export class AddItemsComponent implements OnInit {
   updateItemPrice(item: ItemsResponseI) {
     console.log(item);
 
-    this.itemsService.updateItemPrice(item.itemId, Number(this.serviceProviderId), item.price)
+    this.itemsService.updateItemPrice(item.itemId, Number(this.serviceProvider.serviceProviderId), item.price)
       .subscribe(res => {
         console.log(res);
         item.backPrice = item.price;
@@ -210,10 +222,10 @@ export class AddItemsComponent implements OnInit {
     this.itemsService.addItem(item.categoryId, item.subCategoryId, Number(item.measurementId), item.itemName)
       .subscribe((res: any) => {
         item.show = false;
-        this.serviceProviderService.mapItemToServiceProvider(Number(this.serviceProviderId), res.itemId, item.itemPrice)
+        this.serviceProviderService.mapItemToServiceProvider(Number(this.serviceProvider.serviceProviderId), res.itemId, item.itemPrice)
           .subscribe(_res => {
             console.log(_res);
-            this.getItemsByServiceProvider();
+            this.getItemsByServiceProvider(Number(this.serviceProvider.serviceProviderId));
             // item.
           }, err => {
             item.loading = false;
@@ -225,9 +237,11 @@ export class AddItemsComponent implements OnInit {
 
   }
 
-  getItemsByServiceProvider() {
+  getItemsByServiceProvider(serviceProviderId: number) {
     this.showSpinner = true;
-    this.itemsService.getItemsByServiceProviderId(this.serviceProviderId)
+    console.log(this.serviceProvider);
+
+    this.itemsService.getItemsByServiceProviderId(serviceProviderId)
       .subscribe((res) => {
         console.log(res);
         this.items = Object.values(res.reduce((r: any, a: ItemsResponseI) => {
@@ -272,15 +286,43 @@ export class AddItemsComponent implements OnInit {
       })
   }
 
-  getServiceProviderByBusinessCode() {
+  getServiceProviderByBusinessCode(businesCode: string) {
 
-    this.serviceProviderService.getServiceProviderByBusinessCode(this.businesCode)
-      .subscribe(res => {
-        this.title += " - " + res.serviceProviderName
+    this.serviceProviderService.getServiceProviderByBusinessCode(businesCode)
+      .subscribe(async res => {
+        this.title += " - " + res.serviceProviderName;
+        this.serviceProvider = res;
+        await this.getLink(String(res.qrCode));
       }, err => {
         console.log(err);
 
       })
+  }
+
+  async getLink(qrCode: string) {
+    try {
+
+      console.log(this.img);
+
+      let canvas = <HTMLCanvasElement>document.createElement('CANVAS')
+      const ctx = canvas.getContext('2d')
+      ctx?.drawImage(this.img.nativeElement, 0, 0);
+      const dataURL = canvas.toDataURL();
+      console.log(dataURL)
+
+      // this.serviceProviderService.getQrCode(qrCode)
+      // .subscribe(res => {
+      //   console.log(res);
+
+      // }, console.log)
+
+      this.whatasppLink = `https://wa.me/${this.serviceProvider?.mobileNumber}/?text=${qrCode}`;
+      console.log(this.whatasppLink);
+
+    } catch (error) {
+      console.log(error);
+
+    }
   }
 
 }

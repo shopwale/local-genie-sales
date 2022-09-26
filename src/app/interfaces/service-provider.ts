@@ -2,8 +2,9 @@ export interface ServiceProviderI {
     mobileNumber: number;
     serviceProviderName: string;
     pinCode: string;
+    qrCode?: string;
     address: string;
-    deliveryService: boolean;
+    deliveryService?: boolean;
     serviceProviderId?: number;
     serviceProviderIconURL?: string;
     businessId?: string;

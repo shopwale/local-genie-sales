@@ -27,4 +27,8 @@ export class ServiceProviderService {
     return this.http.get(ApiConst.GET_SERVICE_PROVIDER_BY_BUSINESS_CODE, { params: { businessCode } }) as Observable<ServiceProviderI>;
   }
 
+  getQrCode(qrCode: string): Observable<ServiceProviderI> {
+    return this.http.get(qrCode) as Observable<ServiceProviderI>;
+  }
+
 }
