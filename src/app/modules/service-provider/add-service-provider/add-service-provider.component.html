@@ -4,44 +4,55 @@
     <form [formGroup]="addForm" class="w-80 m-lr-auto" *ngIf="addForm">
         <div class="m-t-30">
             <label for="serviceProviderName">Name</label>
-            <input type="text" formControlName="serviceProviderName" name="serviceProviderName" placeholder="Name" [ngStyle]="{'border-color': addForm.get('serviceProviderName')?.invalid && addForm.get('serviceProviderName')?.touched ? 'red':'rgba(0,0,0,0)'}">
-            <tn-form-error [control]="addForm.get('serviceProviderName')" [field]="'Name'" ></tn-form-error>
+            <input type="text" formControlName="serviceProviderName" name="serviceProviderName" placeholder="Name"
+                [ngStyle]="{'border-color': addForm.get('serviceProviderName')?.invalid && addForm.get('serviceProviderName')?.touched ? 'red':'rgba(0,0,0,0)'}">
+            <tn-form-error [control]="addForm.get('serviceProviderName')" [field]="'Name'"></tn-form-error>
         </div>
         <div class="m-t-30">
             <label for="categoryId">Category</label>
             <select name="categoryId" id="categoryId" formControlName="categoryId"
                 [ngStyle]="{'color': !addForm.get('categoryId')?.value? 'var(--font-color)':'', 'font-size': !addForm.get('categoryId')?.value? '90%':'', 'border-color': addForm.get('categoryId')?.invalid && addForm.get('categoryId')?.touched ? 'red':'rgba(0,0,0,0)'}">
                 <option value="">Select Category</option>
-                <option [value]="category?.categoryId" *ngFor="let category of categories">{{category?.categoryName}}</option>
+                <option [value]="category?.categoryId" *ngFor="let category of categories">{{category?.categoryName}}
+                </option>
             </select>
-            <tn-form-error [control]="addForm.get('categoryId')" [field]="'Category'" ></tn-form-error>
+            <tn-form-error [control]="addForm.get('categoryId')" [field]="'Category'"></tn-form-error>
         </div>
         <div class="m-t-30 pos-relative">
             <label for="mobileNumber">Mobile</label>
             <span class="code">+91</span>
-            <input type="text" formControlName="mobileNumber" name="mobileNumber" placeholder="Mobile" style="padding-left: 45px;" [ngStyle]="{'border-color': addForm.get('mobileNumber')?.invalid && addForm.get('mobileNumber')?.touched ? 'red':'rgba(0,0,0,0)'}">
-            <tn-form-error [control]="addForm.get('mobileNumber')" [field]="'Mobile'" ></tn-form-error>
+            <input type="text" formControlName="mobileNumber" name="mobileNumber" placeholder="Mobile"
+                style="padding-left: 45px;"
+                [ngStyle]="{'border-color': addForm.get('mobileNumber')?.invalid && addForm.get('mobileNumber')?.touched ? 'red':'rgba(0,0,0,0)'}">
+            <tn-form-error [control]="addForm.get('mobileNumber')" [field]="'Mobile'"></tn-form-error>
         </div>
         <div class="m-t-30">
             <label for="pinCode">Pincode</label>
-            <input type="text" formControlName="pinCode" name="pinCode" placeholder="Pincode" [ngStyle]="{'border-color': addForm.get('pinCode')?.invalid && addForm.get('pinCode')?.touched ? 'red':'rgba(0,0,0,0)'}">
-            <tn-form-error [control]="addForm.get('pinCode')" [field]="'Pincode'" ></tn-form-error>
+            <input type="text" formControlName="pinCode" name="pinCode" placeholder="Pincode"
+                [ngStyle]="{'border-color': addForm.get('pinCode')?.invalid && addForm.get('pinCode')?.touched ? 'red':'rgba(0,0,0,0)'}">
+            <tn-form-error [control]="addForm.get('pinCode')" [field]="'Pincode'"></tn-form-error>
         </div>
         <div class="m-t-30">
             <label for="address">Address</label>
-            <textarea formControlName="address" name="address" rows="6" placeholder="Address" [ngStyle]="{'border-color': addForm.get('address')?.invalid && addForm.get('address')?.touched ? 'red':'rgba(0,0,0,0)'}"></textarea>
-            <tn-form-error [control]="addForm.get('address')" [field]="'Address'" ></tn-form-error>
+            <textarea formControlName="address" name="address" rows="6" placeholder="Address"
+                [ngStyle]="{'border-color': addForm.get('address')?.invalid && addForm.get('address')?.touched ? 'red':'rgba(0,0,0,0)'}"></textarea>
+            <tn-form-error [control]="addForm.get('address')" [field]="'Address'"></tn-form-error>
         </div>
         <div class="m-t-30">
-            <div class="deliver" [ngStyle]="{'border-color': addForm.get('deliveryService')?.value ? 'var(--secondary-color)': ''}">
+            <div class="deliver"
+                [ngStyle]="{'border-color': addForm.get('deliveryService')?.value ? 'var(--secondary-color)': ''}">
                 <input type="checkbox" formControlName="deliveryService" name="deliveryService">
-                <label for="deliveryService" style="display: 'inline-block';margin-left: 10px;" [ngStyle]="{'color': addForm.get('deliveryService')?.value ? 'var(--secondary-color)': ''}">Do you deliver to door step?</label>
+                <label for="deliveryService" style="display: 'inline-block';margin-left: 10px;"
+                    [ngStyle]="{'color': addForm.get('deliveryService')?.value ? 'var(--secondary-color)': ''}">Do you
+                    deliver to door step?</label>
             </div>
         </div>
     </form>
 
     <div class="w-80 m-lr-auto m-t-30">
-        <button (click)="addServiceProvider()" class="button-border w-100">Submit</button>
+
+        <button (click)="addServiceProvider()" class="button-border w-100" [disabled]="showSpinner">Submit <i
+                class="gg-spinner m-l-10" *ngIf="showSpinner"></i></button>
     </div>
 
 </div>

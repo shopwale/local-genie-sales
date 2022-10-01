@@ -1,3 +1,4 @@
+import { NotificationService } from './../../../services/notification.service';
 import { ServiceProviderI } from './../../../interfaces/service-provider';
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
@@ -39,7 +40,8 @@ export class AddItemsComponent implements OnInit, AfterViewInit {
     private activatedRoute: ActivatedRoute,
     private categoryService: CategoriesService,
     private serviceProviderService: ServiceProviderService,
-  ) { }
+    private notificationService:NotificationService
+    ) { }
 
   ngAfterViewInit(): void {
     console.log(this.img.nativeElement);
@@ -72,6 +74,7 @@ export class AddItemsComponent implements OnInit, AfterViewInit {
         this.measurements = res;
       }, err => {
         console.log(err);
+        this.notificationService.showError(err?.error?.message || err?.statusText);
 
       })
   }
@@ -99,6 +102,7 @@ export class AddItemsComponent implements OnInit, AfterViewInit {
 
       }, err => {
         console.log(err);
+        this.notificationService.showError(err?.error?.message || err?.statusText);
       })
   }
 
@@ -126,6 +130,7 @@ export class AddItemsComponent implements OnInit, AfterViewInit {
 
         }, err => {
           item.showSpinner = false;
+          this.notificationService.showError(err?.error?.message || err?.statusText);
 
         });
     }, 300)
@@ -173,7 +178,8 @@ export class AddItemsComponent implements OnInit, AfterViewInit {
           this.showSpinnerSubCategory = false;
         }, err => {
           console.log(err);
-          this.showSpinnerSubCategory = false;
+        this.notificationService.showError(err?.error?.message || err?.statusText);
+        this.showSpinnerSubCategory = false;
         })
     }, 300)
 
@@ -187,6 +193,9 @@ export class AddItemsComponent implements OnInit, AfterViewInit {
       .subscribe(res => {
         console.log(res);
         item.subItems.push({ ...selectedItem, ...{ subItems: "", price: 0, show: false } });
+
+      }, err => {
+        this.notificationService.showError(err?.error?.message || err?.statusText);
 
       })
 
@@ -211,6 +220,7 @@ export class AddItemsComponent implements OnInit, AfterViewInit {
 
       }, err => {
         console.log(err);
+        this.notificationService.showError(err?.error?.message || err?.statusText);
 
       })
   }
@@ -233,6 +243,7 @@ export class AddItemsComponent implements OnInit, AfterViewInit {
 
       }, err => {
         item.loading = false;
+        this.notificationService.showError(err?.error?.message || err?.statusText);
       });
 
   }
@@ -282,6 +293,7 @@ export class AddItemsComponent implements OnInit, AfterViewInit {
       }, err => {
         this.showSpinner = false;
         console.log(err);
+        this.notificationService.showError(err?.error?.message || err?.statusText);
 
       })
   }
@@ -295,6 +307,7 @@ export class AddItemsComponent implements OnInit, AfterViewInit {
         await this.getLink(String(res.qrCode));
       }, err => {
         console.log(err);
+        this.notificationService.showError(err?.error?.message || err?.statusText);
 
       })
   }
@@ -302,13 +315,12 @@ export class AddItemsComponent implements OnInit, AfterViewInit {
   async getLink(qrCode: string) {
     try {
 
-      console.log(this.img);
+      // console.log(this.img);
 
-      let canvas = <HTMLCanvasElement>document.createElement('CANVAS')
-      const ctx = canvas.getContext('2d')
-      ctx?.drawImage(this.img.nativeElement, 0, 0);
-      const dataURL = canvas.toDataURL();
-      console.log(dataURL)
+      // let canvas = <HTMLCanvasElement>document.createElement('CANVAS')
+      // const ctx = canvas.getContext('2d')
+      // ctx?.drawImage(this.img.nativeElement, 0, 0);
+      // const dataURL = canvas.toDataURL();
 
       // this.serviceProviderService.getQrCode(qrCode)
       // .subscribe(res => {
@@ -316,11 +328,13 @@ export class AddItemsComponent implements OnInit, AfterViewInit {
 
       // }, console.log)
 
-      this.whatasppLink = `https://wa.me/${this.serviceProvider?.mobileNumber}/?text=${qrCode}`;
+      let message = `Welcome to Local Genie.\nBelow is your qr code\n ${qrCode}`;
+
+      this.whatasppLink = `https://wa.me/${this.serviceProvider?.mobileNumber}/?text=${encodeURIComponent(message)}`;
       console.log(this.whatasppLink);
 
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      console.log(err);
 
     }
   }

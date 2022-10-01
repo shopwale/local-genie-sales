@@ -1,3 +1,4 @@
+import { NotificationService } from './../../../services/notification.service';
 import { ServiceProviderI } from './../../../interfaces/service-provider';
 import { Component, OnInit } from '@angular/core';
 import { ServiceProviderService } from 'src/app/services/service-provider.service';
@@ -12,7 +13,8 @@ export class ListServiceProviderComponent implements OnInit {
   serviceProviders: ServiceProviderI[] = [];
 
   constructor(
-    private serviceProviderService: ServiceProviderService
+    private serviceProviderService: ServiceProviderService,
+    private notificationService: NotificationService
   ) { }
 
   ngOnInit(): void {
@@ -25,7 +27,7 @@ export class ListServiceProviderComponent implements OnInit {
         this.serviceProviders = res;
       }, err => {
         console.log(err);
-
+        this.notificationService.showError(err?.error?.message || err?.statusText);
       })
   }
 

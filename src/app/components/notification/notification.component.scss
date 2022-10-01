@@ -1,0 +1,26 @@
+div {
+    position: fixed;
+    bottom: 0;
+    padding: 15px 10px;
+    font-family: Lato;
+    left: 0;
+    right: 0;
+    text-align: center;
+
+    span {
+        position: absolute;
+        top: 1px;
+        right: 5px;
+        padding: 0px 5px;
+        font-weight: bold;
+    }
+}
+
+.secondary {
+    background-color: var(--secondary-color);
+    color: var(--primary-color);
+}
+.primary {
+    background: var(--primary-color);
+    color: var(--secondary-color);
+}
