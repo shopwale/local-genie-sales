@@ -1,0 +1,6 @@
+<ng-container *ngIf="(error$ | async) as error">
+    <div *ngIf="error?.message" [ngClass]="{'primary': error?.color == 'red', 'secondary':  error?.color == 'green'}">
+        <span (click)="close()">x</span>
+        {{ error?.message }}
+    </div>
+</ng-container>
